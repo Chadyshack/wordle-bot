@@ -1,3 +1,5 @@
+import itertools
+
 def does_not_contain(letters, word_list):
     # black letters
     if not letters:
@@ -11,10 +13,11 @@ def does_not_contain(letters, word_list):
         try:
             word_list.remove(remove_word)
         except:
-            print("Already removed...(not)" + remove_word)
+            #print("Already removed... (black character)" + remove_word)
+            continue
     return word_list
 
-def does_contain(letters, word_list):
+def does_contain(letters, nums, word_list):
     # yellow letters
     if not letters:
         return word_list
@@ -23,11 +26,16 @@ def does_contain(letters, word_list):
         for letter in letters:
             if letter not in word:
                 remove_list.append(word)
+    for word in word_list:
+        for (letter, num) in zip(letters, nums):
+            if word[int(num) - 1] is letter:
+                remove_list.append(word) 
     for remove_word in remove_list:
         try:
             word_list.remove(remove_word)
         except:
-            print("Already removed...(in)" + remove_word)
+            #print("Already removed... (yellow character)" + remove_word)
+            continue
     return word_list
 
 def contains_in_positions(letter_1, letter_2, letter_3, letter_4, letter_5, word_list):
@@ -57,7 +65,8 @@ def contains_in_positions(letter_1, letter_2, letter_3, letter_4, letter_5, word
         try:
             word_list.remove(remove_word)
         except:
-            print("Already removed...")
+            #print("Already removed... (green character)" + remove_word)
+            continue
     return word_list
 
 def main():
@@ -69,6 +78,11 @@ def main():
         # read black, yellow, and green characters
         l_not_contain = input("Enter letters not in the word (blacked out characters): ")
         l_does_contain = input("Enter letters that exist in the word (yellow characters): ")
+        num_list = []
+        if l_does_contain:
+            for letter in l_does_contain:
+                num = input("What position is the " + letter + " not in? ")
+                num_list.append(num)
         l_contain_in_pos_1 = input("Enter letter that exists in position 1 or * if you do not know (green character): ")
         l_contain_in_pos_2 = input("Enter letter that exists in position 2 or * if you do not know (green character): ")
         l_contain_in_pos_3 = input("Enter letter that exists in position 3 or * if you do not know (green character): ")
@@ -76,7 +90,7 @@ def main():
         l_contain_in_pos_5 = input("Enter letter that exists in position 5 or * if you do not know (green character): ")
         # compile word list based on input information
         word_list = does_not_contain(l_not_contain, word_list)
-        word_list = does_contain(l_does_contain, word_list)
+        word_list = does_contain(l_does_contain, num_list, word_list)
         word_list = contains_in_positions(l_contain_in_pos_1, l_contain_in_pos_2, l_contain_in_pos_3, l_contain_in_pos_4, l_contain_in_pos_5, word_list)
         # print possible words for user
         print("These are the possible remaining words:")
